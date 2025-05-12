@@ -3,14 +3,16 @@ import java.util.Scanner;
 public class Menu {
     // Artributos
     Scanner sc;
+    ConsultaAPI consultaAPI;
 
     // Constructor
     public Menu() {
         this.sc = new Scanner(System.in);
+        this.consultaAPI = new ConsultaAPI();
     }
 
     // Metodos
-    public void mostrarMenu() {
+    public void iniciar() {
         int opcion;
         do {
             System.out.println("***** BIENVENIDO AL CONVERTIDOR DE MONEDAS *****");
@@ -39,22 +41,26 @@ public class Menu {
 
     private String solicitarMoneda(String mensaje) {
         String moneda;
+        boolean esValida;
         do {
             System.out.print(mensaje);
             moneda = sc.next().toUpperCase();
-            if (!consultaAPI.verificarMoneda(moneda)) {
+            esValida = consultaAPI.verificarMoneda(moneda);
+            if (!esValida) {
                 System.out.println("La moneda ingresada NO es válida. Intente nuevamente.");
             }
-        } while (!consultaAPI.verificarMoneda(moneda));
+        } while (!esValida);
         return moneda;
     }
 
     private double solicitarCantidad(String mensaje) {
         double cantidad;
+        sc.nextLine();
         do {
             System.out.print(mensaje);
             if (sc.hasNextDouble()) {
                 cantidad = sc.nextDouble();
+                sc.nextLine();
                 if (cantidad > 0) {
                     return cantidad;
                 } else {
@@ -62,7 +68,7 @@ public class Menu {
                 }
             } else {
                 System.out.println("Valor numérico inválido.");
-                sc.next();
+                sc.nextLine();
             }
         } while (true);
     }
