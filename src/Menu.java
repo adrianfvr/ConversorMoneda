@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class Menu {
     // Artributos
-    Scanner sc;
-    ConsultaAPI consultaAPI;
+    private Scanner sc;
+    private ConsultaAPI consultaAPI;
 
     // Constructor
     public Menu() {
@@ -35,8 +35,9 @@ public class Menu {
         String monedaOrigen = solicitarMoneda("Ingrese código de moneda de origen (Ej: USD): ");
         String monedaDestino = solicitarMoneda("Ingrese código de moneda de destino (Ej: EUR): ");
         double cantidad = solicitarCantidad("Ingrese cantidad (" + monedaOrigen + ") para convertir a (" + monedaDestino + "): ");
-
-        System.out.println("Conversión lista: " + cantidad + " " + monedaOrigen + " → " + monedaDestino);
+        double cantidadConvertida = consultaAPI.convertir(monedaOrigen, monedaDestino, cantidad);
+        if (cantidadConvertida == -1) System.out.println("Error al convertir la moneda.");
+        else System.out.println("\nConversión Realizada: " + cantidad + " " + monedaOrigen + " →→→→→ " + cantidadConvertida + " " + monedaDestino + "\n");
     }
 
     private String solicitarMoneda(String mensaje) {
@@ -74,6 +75,12 @@ public class Menu {
     }
 
     private void tasaDeCambio() {
-        System.out.println("Tasa de Cambio");
+        System.out.println("*** Tasa de Cambio ***");
+        String monedaBase = solicitarMoneda("Ingrese código de moneda para ver tasa de cambio (Ej: USD): ");
+        consultaAPI.obtenerTasaCambio(monedaBase);
+    }
+
+    public Scanner getSc() {
+        return sc;
     }
 }

@@ -31,8 +31,40 @@ public class ConsultaAPI {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Ocurrio un error: " + e.getMessage());
+            System.out.println("Ocurrio un error al verificar el codigo de moneda: " + e.getMessage());
         }
         return false;
+    }
+
+    public double convertir(String monedaOrigen, String monedaDestion, double cantidad) {
+        try {
+            URI direccion = URI.create(BASE_URL + "/pair/" + monedaOrigen + "/" + monedaDestion + "/" + cantidad);
+            HttpRequest request = HttpRequest.newBuilder().uri(direccion).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonObject jsonResponse = new Gson().fromJson(response.body(), JsonObject.class);
+            if (!jsonResponse.get("result").getAsString().equals("success")) return -1;
+            return jsonResponse.get("conversion_result").getAsDouble();
+        } catch (Exception e ) {
+            System.out.println("Ocurrio un error al convertir la cantidad: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public void obtenerTasaCambio(String monedaBase) {
+        try {
+            URI direccion = URI.create(BASE_URL + "/latest/" + monedaBase);
+            HttpRequest request = HttpRequest.newBuilder().uri(direccion).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonObject jsonResponse = new Gson().fromJson(response.body(), JsonObject.class);
+            if (!jsonResponse.get("result").getAsString().equals("success")) {
+                System.out.println("Error al obtener tasa de Cambio");
+                return;
+            };
+            JsonObject tasas = jsonResponse.getAsJsonObject("conversion_rates");
+            System.out.println("Tasas de cambio para " + monedaBase + ":");
+            tasas.entrySet().forEach(item -> System.out.println(item.getKey() + ": " + item.getValue()));
+        } catch (Exception e ) {
+            System.out.println("Ocurrio un error al generar la Tasa de Cambio: " + e.getMessage());
+        }
     }
 }
