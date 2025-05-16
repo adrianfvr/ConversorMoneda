@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class Menu {
     // Artributos
-    private Scanner sc;
-    private ConsultaAPI consultaAPI;
+    private final Scanner sc;
+    private final ConsultaAPI consultaAPI;
 
     // Constructor
     public Menu() {

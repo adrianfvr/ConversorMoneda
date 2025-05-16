@@ -27,3 +27,13 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Archivos de configuración sensibles
+.env
+
+# Librerías externas descargadas manualmente
+lib/
+*.jar
+
+# Archivos de sistema
+*.log

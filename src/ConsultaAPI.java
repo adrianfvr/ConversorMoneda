@@ -4,15 +4,19 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConsultaAPI {
     // Atributos
-    private String API_KEY = "0350f74ee80aa12de05aa976";
-    private String BASE_URL = "https://v6.exchangerate-api.com/v6/" + API_KEY;
-    private HttpClient client;
+    private final String API_KEY;
+    private final String BASE_URL;
+    private final HttpClient client;
 
     // Constructor
     public ConsultaAPI() {
+        Dotenv dotenv = Dotenv.load();
+        this.API_KEY = dotenv.get("API_KEY");
+        this.BASE_URL = "https://v6.exchangerate-api.com/v6/" + API_KEY;
         this.client = HttpClient.newHttpClient();
     }
 
@@ -59,7 +63,7 @@ public class ConsultaAPI {
             if (!jsonResponse.get("result").getAsString().equals("success")) {
                 System.out.println("Error al obtener tasa de Cambio");
                 return;
-            };
+            }
             JsonObject tasas = jsonResponse.getAsJsonObject("conversion_rates");
             System.out.println("Tasas de cambio para " + monedaBase + ":");
             tasas.entrySet().forEach(item -> System.out.println(item.getKey() + ": " + item.getValue()));
